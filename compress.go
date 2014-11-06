@@ -1,8 +1,12 @@
 package incenc
 
-import "strconv"
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
 
-func prefix_match(s, prev string) int {
+func countMatchedPrefix(s, prev string) int {
 	// Calc length of matched prefix string.
 	l := len(s)
 	if n := len(prev); n < l {
@@ -21,23 +25,27 @@ func prefix_match(s, prev string) int {
 	return l
 }
 
-func Compress(a []string) string {
+// Compress returns a string which encoded a string array.
+func Compress(a []string) (string, error) {
 	if len(a) == 0 {
-		return ""
+		return "", nil
 	}
 	b := &buffer{}
 	prev := ""
-	for _, s := range a {
-		if l := prefix_match(s, prev); l > 0 {
+	for i, s := range a {
+		if strings.IndexAny(s, asciiRS+asciiUS) >= 0 {
+			return "", fmt.Errorf("item %d contains inhibited chars", i)
+		}
+		if l := countMatchedPrefix(s, prev); l > 0 {
 			b.WriteString(strconv.Itoa(l))
-			b.WriteString(ASCII_US)
+			b.WriteString(asciiUS)
 			b.WriteString(s[l:])
-			b.WriteString(ASCII_RS)
+			b.WriteString(asciiRS)
 		} else {
 			b.WriteString(s)
-			b.WriteString(ASCII_RS)
+			b.WriteString(asciiRS)
 		}
 		prev = s
 	}
-	return string(*b)
+	return string(*b), nil
 }

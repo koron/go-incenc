@@ -1,6 +1,6 @@
 package incenc
 
 const (
-	ASCII_RS = "\x1e"
-	ASCII_US = "\x1f"
+	asciiRS = "\x1e"
+	asciiUS = "\x1f"
 )

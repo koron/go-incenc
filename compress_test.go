@@ -3,7 +3,10 @@ package incenc
 import "testing"
 
 func checkCompress(t *testing.T, a []string, exp string) {
-	s := Compress(a)
+	s, err := Compress(a)
+	if err != nil {
+		t.Errorf("Compress failed: %s", err)
+	}
 	if s != exp {
 		t.Errorf("Compress failed: expected=%#v actually=%#v", exp, s)
 	}

@@ -7,19 +7,20 @@ import (
 	"strings"
 )
 
+// Decompress returns an array of string, which decoded from string.
 func Decompress(s string) ([]string, error) {
-	a := make([]string, 0, strings.Count(s, ASCII_RS))
+	a := make([]string, 0, strings.Count(s, asciiRS))
 	prev := ""
 	for s != "" {
 		// Split first record.
-		x := strings.Index(s, ASCII_RS)
+		x := strings.Index(s, asciiRS)
 		if x < 0 {
 			return nil, errors.New("not found terminator")
 		}
 		t := s[:x]
 		s = s[x+1:]
 		// Try to split "reuse length" unit.
-		y := strings.Index(t, ASCII_US)
+		y := strings.Index(t, asciiUS)
 		if y < 0 {
 			prev = t
 		} else {
